@@ -101,11 +101,11 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
         onSearch={onSearchHandler}
         searchError={filteredProducts.length === 0 && !!searchText}
         top={offsetTop}
-        aria-hidden={cartOpen === false}
+        aria-hidden={cartOpen !== false}
         tabIndex={cartOpen ? -1 : 0}
       />
       <main className="flex flex-col justify-between grow">
-        <div className="px-5 py-14" aria-hidden={cartOpen === false}>
+        <div className="px-5 py-14" aria-hidden={cartOpen !== false}>
           {!filteredProducts.length && !!searchText && (
             <span className="text-2xl">No products found</span>
           )}
