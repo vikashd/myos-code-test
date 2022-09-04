@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useReducer } from "react";
-import { Product } from "../../types";
 import { PRODUCTS_SET } from "./constants";
 import { IContext, ProductsContext } from "./ProductsContext";
 import { reducer } from "./reducer";
