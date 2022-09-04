@@ -28,7 +28,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     useContext(OrdersContext);
   const [searchText, setSearchText] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
-  const [content, setContent] = useState<"cart" | "orders">();
+  const [overlayContent, setOverlayContent] = useState<"cart" | "orders">();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const headerRef = useRef<HTMLElement>(null);
   const [offsetTop, setOffsetTop] = useState(
@@ -40,9 +40,9 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     [productsMap, cart]
   );
 
-  const onCartOpenHandler = (open: "cart" | "orders") => () => {
-    setContent(open);
-    setCartOpen(!cartOpen || !(cartOpen && open === content));
+  const onCartOpenHandler = (id: "cart" | "orders") => () => {
+    setOverlayContent(id);
+    setCartOpen(!cartOpen || !(cartOpen && id === overlayContent));
   };
 
   const onSearchHandler = (text: string) => {
@@ -70,7 +70,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
   const onFormSubmitHandler = ({ items, email }: OrderFormData) => {
     addOrder({ items, email });
     clearCart();
-    setContent("orders");
+    setOverlayContent("orders");
   };
 
   const renderOverlayButton = ({
@@ -82,7 +82,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
   }) => {
-    const isActive = id === content && cartOpen;
+    const isActive = id === overlayContent && cartOpen;
 
     return (
       <Button
@@ -98,8 +98,8 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     );
   };
 
-  const setOpenHandler = useCallback((open: string | boolean) => {
-    setCartOpen(open as any);
+  const setOpenHandler = useCallback((open: boolean) => {
+    setCartOpen(open);
   }, []);
 
   useEffect(() => {
@@ -184,7 +184,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
             </div>
           }
         >
-          {content === "cart" && (
+          {overlayContent === "cart" && (
             <OrderForm
               className="w-full max-w-2xl mx-auto"
               cart={cartProducts}
@@ -194,7 +194,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
               onFormSubmit={onFormSubmitHandler}
             />
           )}
-          {content === "orders" && (
+          {overlayContent === "orders" && (
             <Order
               className="w-full max-w-xl lg:max-w-2xl mx-auto"
               orders={orders}
