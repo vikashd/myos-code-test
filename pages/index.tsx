@@ -113,7 +113,8 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
             <>
               {!!searchText && (
                 <div className="text-2xl mb-10">
-                  {filteredProducts.length} products found
+                  {filteredProducts.length} product
+                  {filteredProducts.length > 1 ? "s" : ""} found
                 </div>
               )}
               <Products
