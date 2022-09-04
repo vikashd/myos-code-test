@@ -1,6 +1,14 @@
+import cx from "classnames";
 import type { NextPage } from "next";
 import Head from "next/head";
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Order, OrderForm } from "../components/cart";
 import { IconCart, IconClose, IconList } from "../components/img/icons";
 import { Products } from "../components/product";
@@ -19,7 +27,8 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
   const { orders, cart, onAdd, onSubtract, removeItem, addOrder, clearCart } =
     useContext(OrdersContext);
   const [searchText, setSearchText] = useState("");
-  const [cartOpen, setCartOpen] = useState<false | "cart" | "orders">(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [content, setContent] = useState<"cart" | "orders">();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const headerRef = useRef<HTMLElement>(null);
   const [offsetTop, setOffsetTop] = useState(
@@ -31,8 +40,9 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     [productsMap, cart]
   );
 
-  const onCartOpenHandler = (open: false | "cart" | "orders") => () => {
-    setCartOpen(open);
+  const onCartOpenHandler = (open: "cart" | "orders") => () => {
+    setContent(open);
+    setCartOpen(!cartOpen || !(cartOpen && open === content));
   };
 
   const onSearchHandler = (text: string) => {
@@ -60,8 +70,37 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
   const onFormSubmitHandler = ({ items, email }: OrderFormData) => {
     addOrder({ items, email });
     clearCart();
-    setCartOpen("orders");
+    setContent("orders");
   };
+
+  const renderOverlayButton = ({
+    id,
+    label,
+    icon: Icon,
+  }: {
+    id: "cart" | "orders";
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }) => {
+    const isActive = id === content && cartOpen;
+
+    return (
+      <Button
+        className={cx({
+          "bg-black !text-white hover:!bg-white hover:!text-black hover:!border-black focus:border-transparent":
+            isActive,
+        })}
+        icon={isActive ? IconClose : Icon}
+        onClick={onCartOpenHandler(id)}
+      >
+        {isActive ? "Close" : label}
+      </Button>
+    );
+  };
+
+  const setOpenHandler = useCallback((open: string | boolean) => {
+    setCartOpen(open as any);
+  }, []);
 
   useEffect(() => {
     setProducts(productsData);
@@ -84,9 +123,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
           <button
             type="button"
             className="relative"
-            onClick={() =>
-              cartOpen ? setCartOpen(false) : setCartOpen("cart")
-            }
+            onClick={onCartOpenHandler("cart")}
           >
             {!!cartProducts.length && (
               <div className="absolute w-2.5 h-2.5 bg-red-600 rounded-full -top-1 -right-1"></div>
@@ -130,33 +167,24 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
         <Overlay
           top={offsetTop}
           open={cartOpen}
-          setOpen={(open) => {
-            setCartOpen(open as any);
-          }}
+          setOpen={setOpenHandler}
           buttons={
             <div className="grid grid-flow-col gap-2 auto-cols-fr">
-              <Button
-                icon={cartOpen === "cart" ? IconClose : IconCart}
-                onClick={onCartOpenHandler(
-                  cartOpen === "cart" ? false : "cart"
-                )}
-              >
-                {cartOpen === "cart" ? "Close" : "View cart"}
-              </Button>
-              {!!orders.length && (
-                <Button
-                  icon={cartOpen === "orders" ? IconClose : IconList}
-                  onClick={onCartOpenHandler(
-                    cartOpen === "orders" ? false : "orders"
-                  )}
-                >
-                  {cartOpen === "orders" ? "Close" : "View orders"}
-                </Button>
-              )}
+              {renderOverlayButton({
+                id: "cart",
+                label: "View Cart",
+                icon: IconCart,
+              })}
+              {!!orders.length &&
+                renderOverlayButton({
+                  id: "orders",
+                  label: "View orders",
+                  icon: IconList,
+                })}
             </div>
           }
         >
-          {cartOpen === "cart" && (
+          {content === "cart" && (
             <OrderForm
               className="w-full max-w-2xl mx-auto"
               cart={cartProducts}
@@ -166,7 +194,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
               onFormSubmit={onFormSubmitHandler}
             />
           )}
-          {cartOpen === "orders" && (
+          {content === "orders" && (
             <Order
               className="w-full max-w-xl lg:max-w-2xl mx-auto"
               orders={orders}

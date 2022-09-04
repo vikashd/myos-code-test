@@ -4,7 +4,7 @@ type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   hasError?: boolean;
   inputClass?: string;
   iconClass?: string;
-  icon?: React.FC<{ className?: string }>;
+  icon?: React.ComponentType<{ className?: string }>;
 };
 
 const TextInput: React.FC<TextInputProps> = ({

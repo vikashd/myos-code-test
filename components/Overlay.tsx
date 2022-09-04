@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
 
 interface OverlayProps {
-  open?: string | boolean;
-  setOpen: (open: string | boolean) => void;
+  open?: boolean;
+  setOpen: (open: boolean) => void;
   top?: number;
   buttons?: React.ReactNode;
 }
@@ -53,7 +53,10 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
   useEffect(() => {
     const onResizeHandler = () => {
       if (open) {
-        openOverlay();
+        setTop({
+          overlayTop: -containerHeight,
+          contentTop: `translate3d(0, 0, 0)`,
+        });
       }
     };
 
@@ -63,15 +66,13 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
     return () => {
       window.removeEventListener("resize", onResizeHandler);
     };
-  }, [open, top, openOverlay]);
+  }, [open, top, openOverlay, containerHeight]);
 
   useEffect(() => {
     open ? openOverlay() : closeOverlay();
   }, [open, openOverlay, closeOverlay]);
 
   useEffect(() => {
-    setOpen(open);
-
     const onKeyListenerHandler = (e: KeyboardEvent) => {
       if (e.key === "Escape" && open) {
         setOpen(false);
@@ -83,7 +84,7 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
     return () => {
       document.removeEventListener("keydown", onKeyListenerHandler);
     };
-  }, [setOpen, open]);
+  }, [open, setOpen]);
 
   return (
     <div
@@ -95,7 +96,7 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
         style={{ top: overlayTop }}
       >
         <CSSTransition
-          in={!!open}
+          in={open}
           addEndListener={(node, done) => {
             node.addEventListener("transitionend", done, false);
           }}
