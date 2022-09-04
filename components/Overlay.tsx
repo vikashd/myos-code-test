@@ -52,12 +52,14 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
 
   useEffect(() => {
     const onResizeHandler = () => {
-      if (open) {
-        setTop({
-          overlayTop: -containerHeight,
-          contentTop: `translate3d(0, 0, 0)`,
-        });
-      }
+      window.requestAnimationFrame(() => {
+        if (open) {
+          setTop({
+            overlayTop: -containerHeight,
+            contentTop: `translate3d(0, 0, 0)`,
+          });
+        }
+      });
     };
 
     onResizeHandler();

@@ -52,15 +52,16 @@ const HeaderSearch: React.FC<HeaderProps> = ({
     >
       <div
         className={cx("w-full transition-all duration-300 ease", {
-          "max-w-lg px-4": !stuck,
+          "md:max-w-lg px-4": !stuck,
           "max-w-full": stuck,
         })}
       >
         <Search
           inputClass={cx({
-            "border-t-transparent border-l-transparent border-r-transparent focus:border-l-transparent focus:border-r-transparent focus:border-t-transparent focus:border-b-blue-400":
+            "!border-t-transparent !border-l-transparent !border-r-transparent focus:border-b-blue-400":
               stuck,
-            "!border-red-600": searchError,
+            "!border-red-600": !stuck && searchError,
+            "!border-b-red-600 ": stuck && searchError,
           })}
           value={searchText}
           onChange={onSearchHandler}
