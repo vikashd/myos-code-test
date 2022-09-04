@@ -31,7 +31,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     [productsMap, cart]
   );
 
-  const onClickHandler = (open: false | "cart" | "orders") => () => {
+  const onCartOpenHandler = (open: false | "cart" | "orders") => () => {
     setCartOpen(open);
   };
 
@@ -39,7 +39,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     setSearchText(text);
   };
 
-  const onCartRemoveHandler = (id: number) => {
+  const onCartItemRemoveHandler = (id: number) => {
     const item = cartProducts.find(
       ({ id: cartProductId }) => id === cartProductId
     );
@@ -137,14 +137,16 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
             <div className="grid grid-flow-col gap-2 auto-cols-fr">
               <Button
                 icon={cartOpen === "cart" ? IconClose : IconCart}
-                onClick={onClickHandler(cartOpen === "cart" ? false : "cart")}
+                onClick={onCartOpenHandler(
+                  cartOpen === "cart" ? false : "cart"
+                )}
               >
                 {cartOpen === "cart" ? "Close" : "View cart"}
               </Button>
               {!!orders.length && (
                 <Button
                   icon={cartOpen === "orders" ? IconClose : IconList}
-                  onClick={onClickHandler(
+                  onClick={onCartOpenHandler(
                     cartOpen === "orders" ? false : "orders"
                   )}
                 >
@@ -159,7 +161,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
               className="w-full max-w-2xl mx-auto"
               cart={cartProducts}
               onAdd={onAdd}
-              onSubtract={onCartRemoveHandler}
+              onSubtract={onCartItemRemoveHandler}
               onRemoveItem={removeItem}
               onFormSubmit={onFormSubmitHandler}
             />
