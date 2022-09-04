@@ -22,13 +22,15 @@ interface HomeProps {
   data: { products: Product[] };
 }
 
+type CartView = "cart" | "orders";
+
 const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
   const { products, productsMap, setProducts } = useContext(ProductsContext);
   const { orders, cart, onAdd, onSubtract, removeItem, addOrder, clearCart } =
     useContext(OrdersContext);
   const [searchText, setSearchText] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
-  const [overlayContent, setOverlayContent] = useState<"cart" | "orders">();
+  const [overlayContent, setOverlayContent] = useState<CartView>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const headerRef = useRef<HTMLElement>(null);
   const [offsetTop, setOffsetTop] = useState(
@@ -40,7 +42,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     [productsMap, cart]
   );
 
-  const onCartOpenHandler = (id: "cart" | "orders") => () => {
+  const onCartOptionClickHandler = (id: CartView) => () => {
     setOverlayContent(id);
     setCartOpen(!cartOpen || !(cartOpen && id === overlayContent));
   };
@@ -54,23 +56,14 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
       ({ id: cartProductId }) => id === cartProductId
     );
 
-    if (!item) {
-      return;
-    }
-
     if (
-      item.quantity > 1 ||
-      (item.quantity === 1 &&
-        confirm("Are you sure you want to remove this item?"))
+      item &&
+      (item.quantity > 1 ||
+        (item.quantity === 1 &&
+          confirm("Are you sure you want to remove this item?")))
     ) {
       onSubtract(id);
     }
-  };
-
-  const onFormSubmitHandler = ({ items, email }: OrderFormData) => {
-    addOrder({ items, email });
-    clearCart();
-    setOverlayContent("orders");
   };
 
   const renderOverlayButton = ({
@@ -78,7 +71,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     label,
     icon: Icon,
   }: {
-    id: "cart" | "orders";
+    id: CartView;
     label: string;
     icon: React.ComponentType<{ className?: string }>;
   }) => {
@@ -91,16 +84,18 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
             isActive,
         })}
         icon={isActive ? IconClose : Icon}
-        onClick={onCartOpenHandler(id)}
+        onClick={onCartOptionClickHandler(id)}
       >
         {isActive ? "Close" : label}
       </Button>
     );
   };
 
-  const setOpenHandler = useCallback((open: boolean) => {
-    setCartOpen(open);
-  }, []);
+  const onFormSubmitHandler = ({ items, email }: OrderFormData) => {
+    addOrder({ items, email });
+    clearCart();
+    setOverlayContent("orders");
+  };
 
   useEffect(() => {
     setProducts(productsData);
@@ -123,7 +118,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
           <button
             type="button"
             className="relative"
-            onClick={onCartOpenHandler("cart")}
+            onClick={onCartOptionClickHandler("cart")}
           >
             {!!cartProducts.length && (
               <div className="absolute w-2.5 h-2.5 bg-red-600 rounded-full -top-1 -right-1"></div>
@@ -167,7 +162,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
         <Overlay
           top={offsetTop}
           open={cartOpen}
-          setOpen={setOpenHandler}
+          setOpen={(open) => setCartOpen(open)}
           buttons={
             <div className="grid grid-flow-col gap-2 auto-cols-fr">
               {renderOverlayButton({
