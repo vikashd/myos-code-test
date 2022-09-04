@@ -61,7 +61,7 @@ const HeaderSearch: React.FC<HeaderProps> = ({
             "!border-t-transparent !border-l-transparent !border-r-transparent focus:border-b-blue-400":
               stuck,
             "!border-red-600": !stuck && searchError,
-            "!border-b-red-600 ": stuck && searchError,
+            "!border-b-red-600": stuck && searchError,
           })}
           value={searchText}
           onChange={onSearchHandler}
