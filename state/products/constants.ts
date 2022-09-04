@@ -1,0 +1,3 @@
+const NAMESPACE = "PRODUCTS";
+
+export const PRODUCTS_SET = "PRODUCTS/SET";
