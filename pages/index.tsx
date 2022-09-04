@@ -47,6 +47,10 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     setCartOpen(!cartOpen || !(cartOpen && id === overlayContent));
   };
 
+  const onSetOpenHandler = useCallback((open: boolean) => {
+    setCartOpen(open);
+  }, []);
+
   const onSearchHandler = (text: string) => {
     setSearchText(text);
   };
@@ -162,7 +166,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
         <Overlay
           top={offsetTop}
           open={cartOpen}
-          setOpen={(open) => setCartOpen(open)}
+          setOpen={onSetOpenHandler}
           buttons={
             <div className="grid grid-flow-col gap-2 auto-cols-fr">
               {renderOverlayButton({
