@@ -2,8 +2,8 @@ import cx from "classnames";
 import { useState } from "react";
 import { CartProduct, OrderFormData } from "../../types";
 import { calculateTotal, isValidEmail } from "../../utils";
+import { Button, TextInput } from "../";
 import { IconEmail } from "../img/icons";
-import { TextInput } from "../TextInput";
 import { Cart } from "./Cart";
 
 interface OrderFormProps {
@@ -64,19 +64,13 @@ const OrderForm: React.FC<OrderFormProps> = ({
                 placeholder="Email"
                 onChange={onEmailChangeHandler}
               />
-              <button
-                className={cx(
-                  "flex items-center justify-center border-solid border border-sky-500 text-gray-800 hover:border-blue-400 rounded px-2 py-3 w-full",
-                  {
-                    "disabled:opacity-50 disabled:border-gray-500 pointer-events-none":
-                      !isEmailValid,
-                  }
-                )}
-                disabled={!isEmailValid}
+              <Button
                 type="submit"
+                title="Confirm order"
+                disabled={!isEmailValid}
               >
                 Confirm order
-              </button>
+              </Button>
             </div>
           </div>
         </form>

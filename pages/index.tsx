@@ -88,6 +88,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
             isActive,
         })}
         icon={isActive ? IconClose : Icon}
+        labelShow="sm"
         onClick={onCartOptionClickHandler(id)}
       >
         {isActive ? "Close" : label}
