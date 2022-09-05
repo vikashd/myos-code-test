@@ -164,6 +164,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
           )}
         </div>
         <Overlay
+          id={overlayContent as string}
           top={offsetTop}
           open={cartOpen}
           setOpen={onSetOpenHandler}

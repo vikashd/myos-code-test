@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
 
 interface OverlayProps {
+  id: string;
   open?: boolean;
   setOpen: (open: boolean) => void;
   top?: number;
@@ -9,6 +10,7 @@ interface OverlayProps {
 }
 
 const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
+  id,
   setOpen,
   open = false,
   top = 0,
@@ -120,7 +122,10 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
               {buttons}
             </div>
             {!hidden && (
-              <div className="flex flex-col grow px-4 pt-4 pb-20 overflow-y-auto">
+              <div
+                key={id}
+                className="flex flex-col grow px-4 pt-4 pb-20 overflow-y-auto"
+              >
                 {children}
               </div>
             )}
