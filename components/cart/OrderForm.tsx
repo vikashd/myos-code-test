@@ -58,6 +58,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
             </div>
             <div className="mt-auto">
               <TextInput
+                type="email"
                 value={email}
                 icon={IconEmail}
                 iconClass="text-gray-500"
