@@ -28,10 +28,10 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
 
     return (
       <header
-        className="sticky top-0 z-50 flex items-center justify-between px-5 pt-4 pb-2 md:py-8 bg-white border-y border-gray-300"
+        className="sticky top-0 z-50 flex items-center justify-between px-5 py-3 md:py-8 bg-white border-y border-gray-300"
         ref={header}
       >
-        <h1 className="flex divide-y divide-black flex-col md:flex-row items-end md:items-stretch min-h-[38px] md:min-h-0">
+        <h1 className="relative flex divide-y divide-black flex-col md:flex-row items-end md:items-stretch top-[4px] min-h-[38px] md:top-0 md:min-h-0">
           <LogoMyos className="w-16 md:w-24 fill-black mb-1 md:mb-0" />
           <span className="mx-3 hidden md:block">|</span>
           <span className="text-sm md:text-xl font-bold uppercase tracking-widest">
