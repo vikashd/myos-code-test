@@ -80,18 +80,21 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
     icon: React.ComponentType<{ className?: string }>;
   }) => {
     const isActive = id === overlayContent && cartOpen;
+    const buttonLabel = isActive ? "Close" : label;
 
     return (
       <Button
+        type="button"
         className={cx({
-          "bg-black !text-white hover:!bg-white hover:!text-black hover:!border-black focus:border-transparent":
+          "bg-black !text-white hover:!bg-white hover:!text-black hover:!border-black focus:border-transparent transition-colors":
             isActive,
         })}
+        title={buttonLabel}
         icon={isActive ? IconClose : Icon}
         labelShow="sm"
         onClick={onCartOptionClickHandler(id)}
       >
-        {isActive ? "Close" : label}
+        {buttonLabel}
       </Button>
     );
   };
