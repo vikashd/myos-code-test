@@ -29,10 +29,10 @@ a {
   box-sizing: border-box;
 }
 
-.cart-content-enter-active {
+.overlay-content-enter-active {
   transition: transform 0.3s ease;
 }
 
-.cart-content-exit-active {
+.overlay-content-exit-active {
   transition: transform 0.3s ease;
 }

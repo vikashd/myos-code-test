@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
+import { disableWindowScroll, usePrevious } from "../utils";
 
 interface OverlayProps {
   id: string;
@@ -20,25 +21,22 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
   const [hidden, setHidden] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonContainerRef = useRef<HTMLDivElement>(null);
+  const scrollableRef = useRef<HTMLDivElement>(null);
   const buttonContainerHeight = buttonContainerRef?.current?.offsetHeight || 0;
   const [{ overlayTop, contentTop }, setTop] = useState<{
-    overlayTop?: number;
+    overlayTop?: number | string;
     contentTop?: string;
   }>({
     overlayTop: -buttonContainerHeight,
-    contentTop: `translateY(calc(100% - ${buttonContainerHeight}px))`,
+    contentTop: `translate3d(0, calc(100% - ${buttonContainerHeight}px), 0)`,
   });
 
   const containerHeight =
     (containerRef.current?.getBoundingClientRect().top || 0) - top;
 
-  const disableWindowScroll = (disabled: boolean) => {
-    document.body.style.overflow = disabled ? "hidden" : "";
-  };
+  const prevOpen = usePrevious(open);
 
   const openOverlay = useCallback(() => {
-    disableWindowScroll(true);
-    setHidden(false);
     setTop({
       overlayTop: -containerHeight,
       contentTop: `translate3d(0, 0, 0)`,
@@ -51,6 +49,16 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
       contentTop: `translate3d(0, calc(100% - ${buttonContainerHeight}px), 0)`,
     });
   }, [buttonContainerHeight, containerHeight, hidden]);
+
+  const onExitedHandler = () => {
+    setTop((prev) => ({
+      ...prev,
+      overlayTop: -buttonContainerHeight,
+    }));
+
+    setHidden(true);
+    disableWindowScroll(false, scrollableRef.current!);
+  };
 
   useEffect(() => {
     const onResizeHandler = () => {
@@ -73,8 +81,13 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
   }, [open, top, openOverlay, containerHeight]);
 
   useEffect(() => {
+    if (open && !prevOpen) {
+      disableWindowScroll(true, scrollableRef.current!);
+      setHidden(false);
+    }
+
     open ? openOverlay() : closeOverlay();
-  }, [open, openOverlay, closeOverlay]);
+  }, [open, prevOpen, openOverlay, closeOverlay]);
 
   useEffect(() => {
     const onKeyListenerHandler = (e: KeyboardEvent) => {
@@ -90,13 +103,18 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
     };
   }, [open, setOpen]);
 
+  useEffect(() => {
+    scrollableRef.current?.scrollTo(0, 0);
+  }, [id]);
+
   return (
     <div
       className="relative bg-white sticky bottom-0 right-0 w-full z-50"
+      style={{ transform: "translateZ(0)" }}
       ref={containerRef}
     >
       <div
-        className="absolute bottom-0 right-0 w-full overflow-hidden z-50"
+        className="absolute bottom-0 right-0 w-full overflow-hidden"
         style={{ top: overlayTop }}
       >
         <CSSTransition
@@ -104,15 +122,8 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
           addEndListener={(node, done) => {
             node.addEventListener("transitionend", done, false);
           }}
-          classNames="cart-content"
-          onExited={() => {
-            setTop((prev) => ({
-              ...prev,
-              overlayTop: -buttonContainerHeight,
-            }));
-            setHidden(true);
-            disableWindowScroll(false);
-          }}
+          classNames="overlay-content"
+          onExited={onExitedHandler}
         >
           <div
             className="relative bg-white h-full flex flex-col"
@@ -121,14 +132,13 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
             <div className="bg-white px-2 py-2" ref={buttonContainerRef}>
               {buttons}
             </div>
-            {!hidden && (
-              <div
-                key={id}
-                className="flex flex-col grow px-4 pt-4 pb-20 overflow-y-auto"
-              >
-                {children}
-              </div>
-            )}
+
+            <div
+              className="flex flex-col grow px-4 pt-4 pb-20 overflow-y-auto"
+              ref={scrollableRef}
+            >
+              {!hidden && children}
+            </div>
           </div>
         </CSSTransition>
       </div>
