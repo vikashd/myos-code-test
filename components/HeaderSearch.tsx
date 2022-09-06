@@ -26,21 +26,17 @@ const HeaderSearch: React.FC<HeaderProps> = ({
   };
 
   useEffect(() => {
-    const onScrollHandler = () => {
-      const updated =
-        (searchContainerRef.current?.offsetTop || 0) -
-          window.scrollY -
-          (top || 0) <=
-        1;
+    const observer = new IntersectionObserver(
+      ([e]) => {
+        setStuck(() => e.intersectionRatio < 1);
+      },
+      { rootMargin: `-${top + 1}px 0px 0px 0px`, threshold: [1] }
+    );
 
-      setStuck(() => updated);
-    };
-
-    onScrollHandler();
-    window.addEventListener("scroll", onScrollHandler);
+    observer.observe(searchContainerRef.current!);
 
     return () => {
-      document.removeEventListener("scroll", onScrollHandler);
+      observer.disconnect();
     };
   }, [top]);
 

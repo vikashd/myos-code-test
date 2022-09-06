@@ -12,15 +12,17 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
     const header = (ref || headerRef) as React.RefObject<HTMLElement>;
 
     useEffect(() => {
-      const onResizeHandler = () => {
+      const outputsize = () => {
         onHeightChange?.(header.current?.offsetHeight || 0);
       };
 
-      onResizeHandler();
-      window.addEventListener("resize", onResizeHandler);
+      outputsize();
+
+      const observer = new ResizeObserver(outputsize);
+      observer.observe(header.current!);
 
       return () => {
-        document.removeEventListener("resize", onResizeHandler);
+        observer.disconnect();
       };
     }, [header, onHeightChange]);
 
