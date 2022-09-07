@@ -42,7 +42,12 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
     >
       <span className="flex items-center">
         {Icon && <Icon className="block h-5 fill-current" />}
-        <span className={cx(labelClass && `hidden pl-2 ${labelClass}`)}>
+        <span
+          className={cx(
+            "whitespace-nowrap",
+            labelClass && `hidden pl-2 ${labelClass}`
+          )}
+        >
           {children}
         </span>
       </span>

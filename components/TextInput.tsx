@@ -1,10 +1,12 @@
 import cx from "classnames";
+import { IconClose } from "./img/icons";
 
 type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   hasError?: boolean;
   inputClass?: string;
   iconClass?: string;
   icon?: React.ComponentType<{ className?: string }>;
+  onClear?(): void;
 };
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -13,9 +15,14 @@ const TextInput: React.FC<TextInputProps> = ({
   iconClass,
   hasError,
   disabled,
+  onClear,
+  onChange,
+  value,
   ...rest
 }) => (
-  <div className="relative w-full mb-4">
+  <div
+    className={cx("relative w-full mb-4", { "disabled:opacity-75": disabled })}
+  >
     {Icon && (
       <Icon
         className={cx(
@@ -28,14 +35,26 @@ const TextInput: React.FC<TextInputProps> = ({
       className={cx(
         "text-black bg-white border-solid border border-gray-500 py-3 px-3 rounded w-full focus:outline-none focus:border-blue-400",
         { "pl-11": Icon },
-        { "disabled:opacity-75": disabled },
         { "!border-red-600": hasError },
+        { "pr-11": onClear },
         inputClass
       )}
-      type="text"
+      value={value}
+      onChange={onChange}
       disabled={disabled}
       {...rest}
     />
+    {onClear && value && (
+      <button
+        type="button"
+        className={cx(
+          "absolute flex items-center justify-center top-0 right-0 bottom-0 text-gray-600 hover:text-black focus:text-black w-11 z-10"
+        )}
+        onClick={() => onClear?.()}
+      >
+        <IconClose className="h-6 fill-current" />
+      </button>
+    )}
   </div>
 );
 

@@ -52,6 +52,8 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
   }, []);
 
   const onSearchHandler = (text: string) => {
+    window.scrollTo(0, 0);
+
     setSearchText(text);
   };
 
@@ -86,7 +88,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
       <Button
         type="button"
         className={cx({
-          "bg-black !text-white hover:!bg-white hover:!text-black hover:!border-black focus:border-transparent transition-colors":
+          "bg-black !text-white hover:!bg-white hover:!text-black hover:!border-black focus:border-transparent transition-colors whitespace-nowrap":
             isActive,
         })}
         title={buttonLabel}
@@ -143,9 +145,13 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
         top={offsetTop}
         aria-hidden={cartOpen !== false}
         tabIndex={cartOpen ? -1 : 0}
+        disabled={!products.length}
       />
       <main className="flex flex-col justify-between grow">
         <div className="px-5 pt-4 pb-24" aria-hidden={cartOpen !== false}>
+          {!products.length && !searchText && (
+            <span className="text-2xl">No products exist</span>
+          )}
           {!filteredProducts.length && !!searchText && (
             <span className="text-2xl">No products found</span>
           )}
@@ -168,7 +174,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
           )}
         </div>
         <Overlay
-          id={overlayContent as string}
+          id={overlayContent || "overlay"}
           top={offsetTop}
           open={cartOpen}
           setOpen={onSetOpenHandler}
@@ -196,6 +202,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
               onSubtract={onCartItemRemoveHandler}
               onRemoveItem={removeItem}
               onFormSubmit={onFormSubmitHandler}
+              user={orders[orders.length - 1]?.email}
             />
           )}
           {overlayContent === "orders" && (

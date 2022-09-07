@@ -13,6 +13,7 @@ interface OrderFormProps {
   onRemoveItem(id: number): void;
   onFormSubmit(data: OrderFormData): void;
   className?: string;
+  user?: string;
 }
 
 const OrderForm: React.FC<OrderFormProps> = ({
@@ -22,21 +23,33 @@ const OrderForm: React.FC<OrderFormProps> = ({
   onSubtract,
   onRemoveItem,
   onFormSubmit,
+  user,
 }) => {
-  const [email, setEmail] = useState("");
-  const isEmailValid = isValidEmail(email);
+  const [email, setEmail] = useState(user || "");
   const total = calculateTotal(cart);
 
   const onEmailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
+  const validateForm = () => {
+    const isEmailValid = isValidEmail(email);
+
+    return isEmailValid;
+  };
+
   const onFormSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
+    if (!isFormValid) {
+      return;
+    }
+
     onFormSubmit({ items: cart, email });
   };
+
+  const isFormValid = validateForm();
 
   return (
     <div className={cx("flex grow", className)}>
@@ -68,7 +81,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
               <Button
                 type="submit"
                 title="Confirm order"
-                disabled={!isEmailValid}
+                disabled={!isFormValid}
               >
                 Confirm order
               </Button>

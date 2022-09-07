@@ -63,6 +63,7 @@ const HeaderSearch: React.FC<HeaderProps> = ({
           onChange={onSearchHandler}
           placeholder="Search products"
           hasError={searchError}
+          onClear={() => onSearch("")}
           {...rest}
         />
       </div>

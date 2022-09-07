@@ -29,7 +29,7 @@ const Card: React.FC<CardProps> = ({
     <div className="relative">
       <div className="relative pt-[100%]">
         <Image
-          className="rounded"
+          className="rounded pointer-events-none"
           src={image}
           alt={title}
           layout="fill"

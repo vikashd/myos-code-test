@@ -12,13 +12,13 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
     const header = (ref || headerRef) as React.RefObject<HTMLElement>;
 
     useEffect(() => {
-      const outputsize = () => {
+      const setHeight = () => {
         onHeightChange?.(header.current?.offsetHeight || 0);
       };
 
-      outputsize();
+      setHeight();
 
-      const observer = new ResizeObserver(outputsize);
+      const observer = new ResizeObserver(setHeight);
       observer.observe(header.current!);
 
       return () => {
@@ -28,7 +28,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
 
     return (
       <header
-        className="sticky top-0 z-50 flex items-center justify-between px-5 py-3 md:py-8 bg-white border-y border-gray-300"
+        className="sticky top-0 flex items-center justify-between px-5 py-3 md:py-8 bg-white border-y border-gray-300 z-50"
         ref={header}
       >
         <h1 className="relative flex divide-y divide-black flex-col md:flex-row items-end md:items-stretch top-[4px] min-h-[38px] md:top-0 md:min-h-0">
