@@ -70,6 +70,7 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
     }));
 
     setHidden(true);
+    disableWindowScroll(false, scrollableRef.current!);
   };
 
   useEffect(() => {
@@ -84,8 +85,6 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
     if (open && !prevOpen) {
       disableWindowScroll(true, scrollableRef.current!);
       setHidden(false);
-    } else if (!open && prevOpen) {
-      disableWindowScroll(false, scrollableRef.current!);
     }
 
     if (open) {
