@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
-import { disableWindowScroll, usePrevious } from "../utils";
+import { disableWindowScroll, usePrevious } from "../../utils";
 
 interface OverlayProps {
   id: string;
