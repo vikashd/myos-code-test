@@ -149,7 +149,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
       />
       <main className="flex flex-col justify-between grow">
         <div className="px-5 pt-4 pb-24" aria-hidden={cartOpen !== false}>
-          {!products.length && !searchText && (
+          {!productsData.length && !searchText && (
             <span className="text-2xl">No products exist</span>
           )}
           {!filteredProducts.length && !!searchText && (
