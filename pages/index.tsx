@@ -101,7 +101,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
             onClick={onCartOptionClickHandler("cart")}
           >
             {!!cartProducts.length && (
-              <div className="absolute w-2.5 h-2.5 bg-red-600 rounded-full -top-1 -right-1"></div>
+              <div className="absolute w-2.5 h-2.5 bg-red-600 rounded-full -top-1 -right-1" />
             )}
             <IconCart className="w-8 fill-black" />
           </button>
@@ -113,12 +113,12 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
         onSearch={onSearchHandler}
         searchError={filteredProducts.length === 0 && !!searchText}
         top={offsetTop}
-        aria-hidden={cartOpen !== false}
+        aria-hidden={cartOpen}
         tabIndex={cartOpen ? -1 : 0}
         disabled={!products.length}
       />
       <main className="flex flex-col justify-between grow">
-        <div className="px-5 pt-4 pb-24" aria-hidden={cartOpen !== false}>
+        <div className="px-5 pt-4 pb-24" aria-hidden={cartOpen}>
           {!productsData.length && !searchText && (
             <span className="text-2xl">No products exist</span>
           )}
@@ -138,7 +138,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
                 cart={cart}
                 onAdd={onAdd}
                 onSubtract={onSubtract}
-                disabled={cartOpen !== false}
+                disabled={cartOpen}
               />
             </>
           )}
