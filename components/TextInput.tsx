@@ -35,8 +35,8 @@ const TextInput: React.FC<TextInputProps> = ({
       className={cx(
         "text-black bg-white border-solid border border-gray-500 py-3 px-3 rounded w-full focus:outline-none focus:border-blue-400",
         { "pl-11": Icon },
-        { "!border-red-600": hasError },
         { "pr-11": onClear },
+        { "!border-red-600": hasError },
         inputClass
       )}
       value={value}
