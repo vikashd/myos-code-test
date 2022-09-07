@@ -51,6 +51,18 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
     });
   }, [buttonContainerHeight, containerHeight, hidden]);
 
+  const onResizeHandler = useCallback(() => {
+    const containerHeight =
+      (containerRef.current?.getBoundingClientRect().top || 0) - top;
+
+    if (open) {
+      setTop({
+        overlayTop: -containerHeight,
+        contentTop: `translate3d(0, 0, 0)`,
+      });
+    }
+  }, [open, top]);
+
   const onExitedHandler = () => {
     setTop((prev) => ({
       ...prev,
@@ -58,36 +70,31 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
     }));
 
     setHidden(true);
-    disableWindowScroll(false, scrollableRef.current!);
   };
 
   useEffect(() => {
-    const onResizeHandler = () => {
-      window.requestAnimationFrame(() => {
-        if (open) {
-          setTop({
-            overlayTop: -containerHeight,
-            contentTop: `translate3d(0, 0, 0)`,
-          });
-        }
-      });
-    };
-
-    onResizeHandler();
     window.addEventListener("resize", onResizeHandler);
 
     return () => {
       window.removeEventListener("resize", onResizeHandler);
     };
-  }, [open, top, openOverlay, containerHeight]);
+  }, [onResizeHandler]);
 
   useEffect(() => {
     if (open && !prevOpen) {
       disableWindowScroll(true, scrollableRef.current!);
       setHidden(false);
+    } else if (!open && prevOpen) {
+      disableWindowScroll(false, scrollableRef.current!);
     }
 
-    open ? openOverlay() : closeOverlay();
+    if (open) {
+      if (prevOpen !== open) {
+        openOverlay();
+      }
+    } else {
+      closeOverlay();
+    }
   }, [open, prevOpen, openOverlay, closeOverlay]);
 
   useEffect(() => {
@@ -110,8 +117,7 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
 
   return (
     <div
-      className="relative bg-white sticky bottom-0 right-0 w-full z-50"
-      style={{ transform: "translateZ(0)" }}
+      className="relative bg-white sticky bottom-0 right-0 w-full z-[100]"
       ref={containerRef}
     >
       <div
