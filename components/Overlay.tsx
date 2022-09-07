@@ -75,11 +75,14 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
 
   useEffect(() => {
     window.addEventListener("resize", onResizeHandler);
+    window.addEventListener("orientationchange", onResizeHandler);
+    onResizeHandler();
 
     return () => {
       window.removeEventListener("resize", onResizeHandler);
+      window.removeEventListener("orientationchange", onResizeHandler);
     };
-  }, [onResizeHandler]);
+  }, [onResizeHandler, top]);
 
   useEffect(() => {
     if (open && !prevOpen) {
