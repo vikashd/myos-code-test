@@ -9,7 +9,7 @@ import React, {
   useState,
 } from "react";
 import { Order, OrderForm } from "../components/cart";
-import { IconCart } from "../components/img/icons";
+import { IconCart, IconList } from "../components/img/icons";
 import { Overlay, OverlayButton } from "../components/overlay";
 import { Products } from "../components/product";
 import { Header, HeaderSearch } from "../components";
@@ -158,9 +158,9 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
               />
               {!!orders.length && (
                 <OverlayButton
-                  label="View Cart"
+                  label="View Orders"
                   active={"orders" === overlayContent && cartOpen}
-                  icon={IconCart}
+                  icon={IconList}
                   onClick={onCartOptionClickHandler("orders")}
                 />
               )}
