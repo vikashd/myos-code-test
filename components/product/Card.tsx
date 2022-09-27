@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({
         </small>
       </div>
       <div className="my-4">
-        <h4 className="text-xl font-medium my-2">{title}</h4>
+        <h3 className="text-xl font-medium my-2">{title}</h3>
         <p className="text-sm text-gray-600 line-clamp-3 mb-4">{description}</p>
         <QuantitySelector
           quantity={quantity}

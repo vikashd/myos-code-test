@@ -20,7 +20,6 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
 }) => {
   const [hidden, setHidden] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
-  const aRef = useRef<HTMLDivElement>(null);
   const buttonContainerRef = useRef<HTMLDivElement>(null);
   const scrollableRef = useRef<HTMLDivElement>(null);
   const buttonContainerHeight = buttonContainerRef?.current?.offsetHeight || 0;
@@ -145,7 +144,6 @@ const Overlay: React.FC<React.PropsWithChildren<OverlayProps>> = ({
           <div
             className="relative bg-white h-full flex flex-col"
             style={{ transform: contentTop }}
-            ref={aRef}
           >
             <div className="bg-white px-2 py-2" ref={buttonContainerRef}>
               {buttons}

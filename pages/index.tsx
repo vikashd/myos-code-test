@@ -98,6 +98,7 @@ const Home: NextPage<HomeProps> = ({ data: { products: productsData } }) => {
           <button
             type="button"
             className="relative"
+            title="View Cart"
             onClick={onCartOptionClickHandler("cart")}
           >
             {!!cartProducts.length && (
